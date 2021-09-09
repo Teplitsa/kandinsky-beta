@@ -1,0 +1,47 @@
+/** == General (_general.scss) == */
+// Frontend styles that don't belong other places
+
+body {
+	background: var(--knd-page-bg-color);
+	color: var(--knd-color-base,#000000);
+	text-rendering: optimizeLegibility;
+	@include knd-body-text();
+
+	& > svg { display: none; }
+}
+
+
+a {
+	text-decoration: none;
+	outline: none;
+}
+
+.svg-icon, .svg-pic {
+	display: inline-block;
+}
+
+
+//global page elements
+.main-content {
+	overflow:hidden;
+	min-height: 60vh;
+} 
+
+.heading {
+	h1 {
+		padding: $gut / 1.2 0px $gut / 1.7 0px;
+	}
+}
+
+.section-title {
+	@include knd-head-exlarge-single-text();
+}
+
+.knd-main {
+	overflow: hidden;
+	padding-top: $logo_small_h + $height_gap + 1px;
+
+	@include for(medium-screens) {
+		padding-top: $logo_full_h + $height_gap + 1px;
+	}
+}

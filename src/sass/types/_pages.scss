@@ -1,0 +1,52 @@
+/** == Pages (_pages.scss) == **/
+// Styles of elements used on static pages 
+
+/** Parts **/
+
+.page-header {
+	text-align: center;
+	padding: $gut 0;
+}
+
+.page-title {
+	@include knd-head-page();
+	color: var(--knd-color-headings);
+}
+
+.page-intro {
+	margin-top: $gut/2;
+	font-size: 24px;
+	font-family: $heading;
+	line-height: 1.11;
+	letter-spacing: .03em;
+	font-weight: 800;
+	color: var(--knd-color-headings);
+	@media (min-width: 1024px) {
+		font-size: 32px;
+	}
+}
+
+.page-content {
+	padding-bottom: $gut;
+	min-height: 60vh;
+}
+
+.page-crumb {
+	text-align: center;
+	@include knd-head-tiny-text();
+	margin-bottom: $gut/4;
+	a {
+		color: $color-main;
+		&:hover, &:focus, &:active { color: $color-main-dark; }
+	}
+}
+
+.err-404-text {
+	text-align: center;
+	margin-bottom: 2em; 
+}
+
+.err404-content {
+	min-height: 70vh;
+}
+

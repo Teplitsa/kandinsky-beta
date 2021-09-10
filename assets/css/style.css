@@ -5696,6 +5696,7 @@ div[id*="leyka-pf-"] .inpage-card__thumb {
 	border: 1px solid #8599A4;
 	padding: 12px;
 	font-weight: bold;
+	font-family: inherit;
 }
 
 .knd-event__booking .em-booking-form-details input.input:focus,

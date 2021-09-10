@@ -19,7 +19,9 @@ remove_action( 'get_the_excerpt', array('EM_Event_Post', 'enable_the_content'), 
  * Remove auto adding events in the_content.
  */
 function knd_em_remove_content_filter_after_head(){
-	remove_action( 'wp_head', 'em_add_content_filter_after_head', 1000 );
+	if ( is_page( get_option( 'dbem_events_page' ) ) ) {
+		remove_action( 'wp_head', 'em_add_content_filter_after_head', 1000 );
+	}
 }
 add_action( 'wp_loaded', 'knd_em_remove_content_filter_after_head' );
 
@@ -105,13 +107,11 @@ function knd_get_event_type() {
 
 	$event_type = false;
 
-	if ( 'URL' === knd_get_event_meta( '#_EVENTLOCATION{type}' ) ) {
+	if ( 'url' === knd_get_event_meta( 'event_location_type') ) {
 		$event_type = '<span class="knd-event__details-location-type">' . esc_html__( 'online', 'knd' ) . '</span>';
 
-		$event_url  = knd_get_event_meta('#_EVENTLOCATION{url}');
-		$event_text = knd_get_event_meta('#_EVENTLOCATION{text}');
-		if ( knd_get_booking_status() ) {
-			$event_type .= ' ' . knd_get_event_meta('#_EVENTLOCATION');
+		if ( knd_get_booking_status() || ! knd_get_event_meta( 'event_rsvp') ) {
+			$event_type = knd_get_event_meta( '#_EVENTLOCATION' );
 		}
 	} else if ( knd_get_event_meta( '#_LOCATIONPOSTID' ) ) {
 		$locations = array(
@@ -370,19 +370,18 @@ add_filter( 'em_registration_errors', 'knd_em_registration_errors' );
 function knd_em_register_new_user( $user_id ){
 
 	$fields = knd_em_custom_form_fields();
-	if ( ! $fields ) {
-		return;
-	}
-
-	foreach( $fields as $field ) {
-		if ( isset( $field['slug'] ) ) {
-			$slug = trim( $field['slug'] );
-			$attr = 'dbem_' . $slug;
-			if ( isset( $_REQUEST[ $attr ] ) ) {
-					update_user_meta( $user_id, $attr, $_REQUEST[ $attr ]);
+	if ( $fields ) {
+		foreach( $fields as $field ) {
+			if ( isset( $field['slug'] ) ) {
+				$slug = trim( $field['slug'] );
+				$attr = 'dbem_' . $slug;
+				if ( isset( $_REQUEST[ $attr ] ) ) {
+						update_user_meta( $user_id, $attr, $_REQUEST[ $attr ]);
+				}
 			}
 		}
 	}
+
 	return $user_id;
 }
 add_filter( 'em_register_new_user', 'knd_em_register_new_user' );
@@ -395,37 +394,33 @@ function knd_em_person_display_summary( $html, $current ){
 	$user_id = $current->ID;
 
 	$fields = knd_em_custom_form_fields();
-	if ( ! $fields ) {
-		return;
-	}
+	if ( $fields ) {
+		foreach( $fields as $field ) {
+			if ( isset( $field['slug'] ) ) {
+				$slug = trim( $field['slug'] );
+				$label = $field['label'];
+				$attr = 'dbem_' . $slug;
 
-	foreach( $fields as $field ) {
-		if ( isset( $field['slug'] ) ) {
-			$slug = trim( $field['slug'] );
-			$label = $field['label'];
-			$attr = 'dbem_' . $slug;
-
-			$user_meta = get_user_meta( $user_id, $attr, true );
-			$html = preg_replace( '/<\/table>/', '<tr><th>' . $label . ':</th><td>' . $user_meta . '</td></tr></table>', $html, 1 );
+				$user_meta = get_user_meta( $user_id, $attr, true );
+				$html = preg_replace( '/<\/table>/', '<tr><th>' . $label . ':</th><td>' . $user_meta . '</td></tr></table>', $html, 1 );
+			}
 		}
 	}
 	return $html;
- }
+}
 add_filter( 'em_person_display_summary', 'knd_em_person_display_summary', 10, 2 );
 
 
 function knd_user_contactmethods( $array ) {
 	$fields = knd_em_custom_form_fields();
-	if ( ! $fields ) {
-		return;
-	}
-
-	foreach( $fields as $field ) {
-		if ( isset( $field['slug'] ) ) {
-			$slug = trim( $field['slug'] );
-			$label = $field['label'];
-			$attr = 'dbem_' . $slug;
-			$array[ $attr ] = $label;
+	if ( $fields ) {
+		foreach( $fields as $field ) {
+			if ( isset( $field['slug'] ) ) {
+				$slug = trim( $field['slug'] );
+				$label = $field['label'];
+				$attr = 'dbem_' . $slug;
+				$array[ $attr ] = $label;
+			}
 		}
 	}
 	return $array;

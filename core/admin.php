@@ -671,6 +671,7 @@ function knd_custom_links_dashboard_screen( $items = array(), $is_initial_call =
  * Doc link in footer text *
  */
 function knd_admin_footer_text( $text ) {
-	return '<span id="footer-thankyou">' . esc_html__( 'A quick guide to working with the site - ', 'knd' ) . str_replace( '<a', '<a target="_blank" ', make_clickable( KND_DOC_URL ) ) . '</span>';
+
+	return $text . '<span class="knd-admin-footer">' . sprintf ( esc_html__( 'A quick guide to working with the site - %s.', 'knd' ), links_add_target( make_clickable( KND_DOC_URL ) ) ) . '</span>';
 }
 add_filter( 'admin_footer_text', 'knd_admin_footer_text' );

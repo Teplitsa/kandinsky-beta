@@ -97,7 +97,7 @@ class KND_CssJs {
 	}
 
 	public function inline_styles_for_teplitsa_plugins(){
-			
+
 		$main_color = knd_get_main_color();
 		$dark_color = knd_color_luminance($main_color, -0.1);
 		$light_color = knd_color_luminance($main_color, 0.2);
